@@ -1,19 +1,13 @@
-#include <iostream>
-#include <map>
-#include <type_traits>
-#include <vector>
-using namespace std;
+// #include "stream.h"
+// using namespace streams;
 
-template <class T, class... U>
-class Test {
-public:
-    T test(U... x) {
-        return x...;
-    }
-};
+#include <utility>
 
 int main() {
-    Test<int(int)> test{};
-    std::cout << test.test(1) << "\n";
+    std::pair<bool, bool> p{ true, false };
+    switch (p) {
+        case std::pair{ true, true }:
+            break;
+    }
     return 0;
 }

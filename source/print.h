@@ -1,18 +1,14 @@
 #pragma once
 
 #include <iostream>
-#include "stream.h"
+#include "pubsub.h"
 
 namespace streams {
 
 template <class Message>
-class Print : public Subscriber<Message> {
-public:
+struct Print : Subscriber<Message> {
     Print(std::ostream& out = std::cout) : m_out{ out } {}
-
-    virtual void notify(const Publisher<Message>& publisher) override {
-        m_out << publisher.message() << "\n";
-    }
+    virtual void notify(const Message &message) override { m_out << message << "\n"; }
 
 private:
     std::ostream& m_out;

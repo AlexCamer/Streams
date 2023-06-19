@@ -1,23 +1,23 @@
-#include <chrono>
 #include <iostream>
 #include "clock.h"
 #include "function.h"
+#include "join.h"
 #include "print.h"
-
-int x2_function(const int& x) {
-    return x * 2;
-}
+using namespace streams;
 
 int main() {
-    using namespace streams;
-
     Clock clock{};
 
-    Function<int, int> x2{ x2_function };
-    x2.subscribe_to(clock);
+    Join<int, int> join{};
+    join.subscribe<0>(clock);
+    join.subscribe<1>(clock);
+    join.reset(clock);
+
+    Function<std::tuple<int, int>, int> add{ [](auto x) { return std::get<0>(x) + std::get<1>(x); } };
+    add.subscribe(join);
 
     Print<int> print{};
-    print.subscribe_to(x2);
+    print.subscribe(add);
 
     clock.start();
     return 0;

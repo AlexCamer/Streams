@@ -1,16 +1,20 @@
 #pragma once
 
-#include <any>
-#include <tuple>
+#include <optional>
 #include "pubsub.h"
 
 namespace streams {
 
-template <class Output, class... Inputs>
-class Stream : public Publisher<Output> {};
+template <class Input, class Output>
+class Stream : public Subscriber<Input>, public Publisher<Output> {
 public:
-private:
-    Publisher<std::any> root;
+    virtual std::optional<Output> update(const Input &input) = 0;
 
-    std::tuple<Publisher<Inputs>*...> m_publishers;
+private:
+    virtual void notify(const Input &input) override {
+        if (auto output = update(input))
+            this->publish(*output);
+    }
+};
+
 }
